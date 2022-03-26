@@ -4,7 +4,7 @@ from graph_generator import generate_graph as chart
 
 
 array = []
-with open('m30.txt') as f:
+with open('m50n200.txt') as f:
     for line in f:
         array.append(int(line.rstrip()))
 processor_count = array.pop(0)
