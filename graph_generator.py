@@ -1,5 +1,6 @@
 from bokeh.io import output_file, show
 from bokeh.plotting import figure
+from bokeh.palettes import viridis
 
 
 def generate_graph(processor_array):
@@ -19,13 +20,13 @@ def generate_graph(processor_array):
     processes = list(range(0, len(processor_array)))
     processes = [str(i) for i in processes]
     order = ["0", "1", "2"]
-    colors = ["#c9d9d3", "#718dbf", "#e84d60"]
+    colors = viridis(longest)
 
     data2 = {str(i): list_of_size_of_max_elements[i] for i in range(0, longest)}
     data2['processes'] = processes
     p = figure(y_range=processes, height=650, width=1200, title="Processes",
                toolbar_location=None, tools="")
-    p.hbar_stack(order, y='processes', color=colors, height=0.8, source=data2,
+    p.hbar_stack(order, y='processes', color=colors[0:longest], height=0.8, source=data2,
                  legend_label=order)
     p.y_range.range_padding = 0.1
     p.ygrid.grid_line_color = None
