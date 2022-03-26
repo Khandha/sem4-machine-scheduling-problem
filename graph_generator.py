@@ -19,18 +19,22 @@ def generate_graph(processor_array):
 
     processes = list(range(0, len(processor_array)))
     processes = [str(i) for i in processes]
-    order = ["0", "1", "2"]
+    order = [str(i+1) for i in range(0, longest)]
     colors = viridis(longest)
 
     data2 = {str(i): list_of_size_of_max_elements[i] for i in range(0, longest)}
     data2['processes'] = processes
     p = figure(y_range=processes, height=650, width=1200, title="Processes",
-               toolbar_location=None, tools="")
-    p.hbar_stack(order, y='processes', color=colors[0:longest], height=0.8, source=data2,
+               toolbar_location="below", tools="pan,wheel_zoom,box_zoom,reset")
+    p.hbar_stack(order,
+                 y='processes',
+                 color=colors[0:longest],
+                 height=0.8,
+                 source=data2,
                  legend_label=order)
     p.y_range.range_padding = 0.1
     p.ygrid.grid_line_color = None
-    p.legend.location = "top_left"
+    p.legend.location = "top_right"
     p.axis.minor_tick_line_color = None
     p.outline_line_color = None
     show(p)
