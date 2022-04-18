@@ -22,10 +22,10 @@ def generate_graph(processor_array):
     order = [str(i+1) for i in range(0, longest)]
     colors = viridis(longest)
 
-    data2 = {str(i): list_of_size_of_max_elements[i] for i in range(0, longest)}
+    data2 = {str(i + 1): list_of_size_of_max_elements[i] for i in range(0, longest)}
     data2['processes'] = processes
     p = figure(y_range=processes, height=650, width=1200, title="Processes",
-               toolbar_location="below", tools="pan,wheel_zoom,box_zoom,reset")
+               toolbar_location="below", tools="pan,wheel_zoom,box_zoom,reset", tooltips="$name @processes: @$name")
     p.hbar_stack(order,
                  y='processes',
                  color=colors[0:longest],

@@ -2,13 +2,13 @@ import sys
 
 
 def findmin(array):
-    min_val = sys.maxsize
-    element = 0
-    for elem in array:
-        if sum(elem) < min_val:
-            min_val = sum(elem)
-            element = elem
-    return array.index(element)
+    # min_val = sys.maxsize
+    # element = 0
+    # for elem in array:
+    #     if sum(elem) < min_val:
+    #         min_val = sum(elem)
+    #         element = elem
+    return array.index(min(array, key=sum))
 
 
 class Greedy:
