@@ -1,7 +1,6 @@
 from file_opener import open_instance
 from greedy import Greedy
 from graph_generator import generate_graph as chart
-
 greedy = Greedy()
 
 instance = open_instance()
