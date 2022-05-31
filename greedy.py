@@ -1,19 +1,29 @@
-def findmin(array):
-    return array.index(min(array, key=sum))
+from math import inf
+from numba import njit
+from numba.typed import List
+
+VALUE_LARGER_THAN_MAXIMUM_TIME = 1000000
 
 
-class Greedy:
-    def __call__(self, task_array, processor_count):
+def greedy(task_array, processor_count):
+    processor_array = [[entry] for entry in task_array[:processor_count]]
+    for elem in task_array[processor_count:]:  # remaining tasks in task array [58, 59, 31, ...]
+        minimal_index, minimal_sum = 0, VALUE_LARGER_THAN_MAXIMUM_TIME
+        for index, processor in enumerate(processor_array):
+            sum_of_processor = sum(processor)
+            if sum_of_processor < minimal_sum:
+                minimal_index = index
+                minimal_sum = sum_of_processor
+        processor_array[minimal_index].append(elem)
+
+    return processor_array
 
 
-        processor_array = []
-        for i in range(0, processor_count):
-            a = [task_array.pop(0)]
-            processor_array.append(a)
+def value(processor_array):
+    maximal_sum = 0
+    for processor in processor_array:
+        sum_of_processor = sum(processor)
+        if sum_of_processor > maximal_sum:
+            maximal_sum = sum_of_processor
+    return maximal_sum
 
-        while task_array:
-            empty_process = (findmin(processor_array))
-            processor_array[empty_process].append(task_array.pop())
-
-        print(sum(max(processor_array, key=sum)))
-        return processor_array
