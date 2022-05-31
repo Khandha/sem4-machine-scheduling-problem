@@ -15,7 +15,7 @@ NO_PROGRESS_BAILOUT_COUNT = 30000
 CHILDREN_COUNT = ceil(POPULATION_SIZE / SELECTION_PAIRS)
 
 
-def create_initial_population(processor_count, task_array, genome_length):
+def create_initial_population(genome_length):
     """
     Creates a random population of POPULATION_SIZE individuals.
     """
@@ -161,7 +161,7 @@ def run_processes(task_array, processor_count):
     queue = multiprocessing.Queue()
     jobs = []
     for _ in range(4):
-        population = create_initial_population(processor_count, task_array, genome_length)
+        population = create_initial_population(genome_length)
         p = multiprocessing.Process(target=process_run, args=(task_array, processor_count, time_end,
                                                               population, queue, genome_length))
         jobs.append(p)
