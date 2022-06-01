@@ -1,18 +1,27 @@
-from random import shuffle, sample, randint
+from random import shuffle, sample, randint, random
 from greedy import greedy, value
 from utils import pairwise
-from time import time
+from time import time, sleep
 from math import ceil
 import multiprocessing
 import os
 
 TIME_MAX = 60 * 5
-POPULATION_SIZE = 12
+POPULATION_SIZE = 10
 SELECTION_PAIRS = 2
-MUTATION_PROBABILITY = 5
-NO_PROGRESS_SHUFFLE_COUNT = 1000
+MUTATION_PROBABILITY = 1
+NO_PROGRESS_SHUFFLE_COUNT = 200
 NO_PROGRESS_BAILOUT_COUNT = 30000
 CHILDREN_COUNT = ceil(POPULATION_SIZE / SELECTION_PAIRS)
+
+
+def create_random_individual(genome_length):
+    """
+    Creates a random individual.
+    """
+    individual = list(range(genome_length))
+    shuffle(individual)
+    return individual
 
 
 def create_initial_population(genome_length):
@@ -21,8 +30,7 @@ def create_initial_population(genome_length):
     """
     population = []
     for _ in range(POPULATION_SIZE):  # create a pool of populations
-        single_genotype = list(range(genome_length))
-        shuffle(single_genotype)
+        single_genotype = create_random_individual(genome_length)
         population.append(single_genotype)
     return population
 
@@ -60,8 +68,10 @@ def crossover(fittest, genome_length):
     for first, second in pairwise(fittest):
         for _ in range(CHILDREN_COUNT):
             splice_point = sorted(sample(range(genome_length), 2))  # [5:10]
-            child = first.copy()  # copy of first
-            child[splice_point[0]:splice_point[1]] = second[splice_point[0]:splice_point[1]]  # swap
+            to_be_pasted = second[splice_point[0]:splice_point[1]]
+            child = list(set(first) - set(to_be_pasted))
+            position = randint(0, len(child) - 1)
+            child[position:position] = to_be_pasted
             children.append(child)  # add child to children
 
     return mutate(children, genome_length)
@@ -143,13 +153,15 @@ def run(task_array, processor_count, population, genome_length, time_end):
 
 
 def process_run(task_array, processor_count, time_end, population, queue, genome_length):
-
     best_genome = run(task_array, processor_count, population, genome_length, time_end)
 
     a = decode(best_genome, task_array)
     decoded_best_genome = greedy(a, processor_count)
-
+    sleep(random()/10)
     queue.put(decoded_best_genome)
+    print("Process " + str(os.getpid()) + " put into queue")
+    print("Process " + str(decoded_best_genome))
+
 
 
 def run_processes(task_array, processor_count):
@@ -166,8 +178,11 @@ def run_processes(task_array, processor_count):
                                                               population, queue, genome_length))
         jobs.append(p)
         p.start()
-    for proc in jobs:
-        proc.join()
+
+    # for proc in jobs:
+    #     proc.join()
+    #     print("Process " + str(proc.pid) + " joined")
+
     best_processes = []
     best_times = []
     for _ in range(4):

@@ -49,4 +49,19 @@ def open_instance():
     with open(file_path) as f:
         for line in f:
             instance_from_file.append(int(line.rstrip()))
-    return instance_from_file
+
+    processor_count = instance_from_file.pop(0)
+    task_count = instance_from_file.pop(0)
+    return task_count, processor_count, instance_from_file
+
+
+def open_from_cli():
+    file_path = input()
+    instance_from_file = []
+    with open(file_path) as f:
+        for line in f:
+            instance_from_file.append(int(line.rstrip()))
+
+    processor_count = instance_from_file.pop(0)
+    task_count = instance_from_file.pop(0)
+    return task_count, processor_count, instance_from_file

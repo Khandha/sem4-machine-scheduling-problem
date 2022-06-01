@@ -1,23 +1,23 @@
 from time import perf_counter
 
-from file_opener import open_instance
-from greedy import greedy
+from file_opener import open_instance, open_from_cli
+from greedy import greedy, value
 from graph_generator import generate_graph as chart
 from genetic_algorithm import run_processes
 
 
 def main():
-    instance = open_instance()
-    processor_count = instance.pop(0)
-    task_count = instance.pop(0)
+    task_count, processor_count, instance = open_from_cli()
 
-    #
-    # greedy_result = greedy(instance, processor_count)
-    # print(sum(max(greedy_result, key=lambda i: sum(i))))
+    greedy_result = greedy(instance, processor_count)
+    # print(greedy_result)
+    print("Greedy: " + str(value(greedy_result)))
     # chart(greedy_result)
 
-    # chart(setup(instance, processor_count))
-    chart(run_processes(instance, processor_count))
+    genetic_result = run_processes(instance, processor_count)
+    print("Genetic: " + str(value(genetic_result)))
+    # print(genetic_result)
+    # chart(genetic_result)
 
 
 if __name__ == "__main__":
